@@ -44,4 +44,4 @@ Used by exclusive sites everywhere to attract the A-listers. Upon registering, a
 == Upgrade Notice ==
 
 = 1.1 =
-* Made address comparison case-insensitive, removed some diagnostic output
+* Made address comparison case-insensitive (will also check old keys for compatibility), removed some diagnostic output
