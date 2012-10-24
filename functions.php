@@ -19,7 +19,7 @@ function bp_group_reservation_create_reservation( $user_email, $group_id, $extra
 		return false;
 	}
 	
-	$meta_name = 'group_reservation_' . md5( $user_email );
+	$meta_name = 'group_reservation_' . md5( strtolower( $user_email ) );
 	return groups_update_groupmeta( $group_id, $meta_name, $extras );
 }
 
@@ -48,8 +48,14 @@ function bp_group_reservation_get_by_user( $user_name ) {
 	
 	global $bp, $wpdb;
 	
-	$meta_name = 'group_reservation_' . md5( $user_name );
+	$meta_name = 'group_reservation_' . md5( strtolower( $user_name ) );
 	$reservation_results = $wpdb->get_results( $wpdb->prepare( 'SELECT group_id, meta_value FROM ' . $bp->groups->table_name_groupmeta . ' WHERE meta_key = %s', $meta_name ) );
+	
+	if( ! $reservation_results ) {
+		// Check case-sensitive as a backup, for 1.0-compatibility
+		$meta_name = 'group_reservation_' . md5( $user_name );
+		$reservation_results = $wpdb->get_results( $wpdb->prepare( 'SELECT group_id, meta_value FROM ' . $bp->groups->table_name_groupmeta . ' WHERE meta_key = %s', $meta_name ) );
+	}
 	
 	if( ! $reservation_results ) return false;
 	
@@ -88,16 +94,21 @@ function bp_group_reservation_delete_by_group( $group_id, $user_name = false ) {
 		
 		$userdata = get_userdata( $current_user->ID );
 		
-		if( $userdata->user_email != $user_name ) {
+		if( strcasecmp( $userdata->user_email, $user_name ) != 0 ) {
 			return false;
 		}
 	}
 	
 	if( ! empty( $user_name ) ) {
+
+		$meta_name = 'group_reservation_' . md5( strtolower( $user_name ) );
+		if( ! groups_delete_groupmeta( $group_id, $meta_name ) ) return false;
 		
+		// Also delete a reservation with uppercase letters for 1.0-compatibility
 		$meta_name = 'group_reservation_' . md5( $user_name );
-		return groups_delete_groupmeta( $group_id, $meta_name );
+		if( ! groups_delete_groupmeta( $group_id, $meta_name ) ) return false;
 		
+		return true;
 	}
 	
 	$meta_name_format = 'group_reservation_%';
@@ -117,7 +128,7 @@ function bp_group_reservation_delete_by_user( $user_name ) {
 	
 	if( ! is_super_admin() )	return false;
 
-	$meta_name = 'group_reservation_' . md5( $user_name );
+	$meta_name = 'group_reservation_' . md5( strtolower( $user_name ) );
 	if( ! $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $bp->groups->table_name_groupmeta . ' WHERE meta_key = %s', $meta_name ) ) ) {
 		$wpdb->print_error();
 	}

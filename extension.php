@@ -149,8 +149,6 @@ class BP_Group_Reservation_Extension extends BP_Group_Extension {
 			
 			if( $reservation = apply_filters( '', $reservation ) ) {
 				
-				echo 'Processing: ' . $reservation;
-				
 				// Check for embedded membership level but apply default if none found
 				$reservation = explode( apply_filters( 'bp_group_reservation_default_extra_separator', ',' ), $reservation );
 				

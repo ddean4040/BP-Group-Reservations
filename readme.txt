@@ -1,9 +1,9 @@
 === BuddyPress Group Reservation ===
 Contributors: ddean
-Tags: buddypress, groups, users, membership
+Tags: buddypress, groups, users, membership, reservation
 Requires at least: 3.4
 Tested up to: 3.5-beta2
-Stable tag: 1.0
+Stable tag: 1.1
 
 Allows BuddyPress group or site administrators to reserve a space in groups for unregistered users by email address.
 
@@ -30,11 +30,18 @@ Used by exclusive sites everywhere to attract the A-listers. Upon registering, a
 `jdoe@example.com, level=mod` (replace `mod` with `admin` to save a group admin spot.)
 
 = Can I store other data in the reservation? =
-* Sure! You can store attributes with '`key=value` pairs, separated by commas. This plugin won't process those values, but it will fire actions for you to use them.
+* Sure! You can store attributes with `key=value` pairs, separated by commas. This plugin won't process those values, but it will fire actions for you to use them.
 
 == Changelog ==
+
+= 1.1 =
+* Fixed: removed diagnostic output
+* Changed: address comparison is case-insensitive, just like email addresses!
 
 = 1.0 =
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1 =
+* Made address comparison case-insensitive, removed some diagnostic output
